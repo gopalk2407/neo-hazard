@@ -6,3 +6,4 @@ dataset.csv
 data/
 models/
 outputs/
+*.bundle
