@@ -1,0 +1,25 @@
+[project]
+name = "neo-hazard"
+version = "0.1.0"
+description = "ML ranking of near-Earth objects by Earth-impact hazard"
+authors = [
+    { name = "Anupamkrishna Mishra" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "joblib>=1.6.0",
+    "matplotlib>=3.11.2",
+    "numpy>=2.5.4",
+    "pandas>=3.0.6",
+    "plotly>=7.1.0",
+    "pyarrow>=26.0.0",
+    "scikit-learn>=1.9.1",
+    "streamlit>=1.59.1",
+]
+
+[project.scripts]
+neo-hazard = "neo_hazard:main"
+
+[build-system]
+requires = ["uv_build>=0.12.19,<0.13.0"]
+build-backend = "uv_build"
