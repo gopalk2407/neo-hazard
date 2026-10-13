@@ -63,3 +63,11 @@ uv run streamlit run app.py
 
 This is a relative ranking heuristic, not a true impact probability; those require
 orbit propagation (see NASA CNEOS Sentry).
+
+## Detailed documentation
+
+See [docs/GUIDE.md](docs/GUIDE.md) for a full walkthrough: every input parameter,
+how the probability is calculated (the ML model and the physics proxy, with
+formulas), what every output column means, a code flowchart of how the modules
+call each other, and a per-function reference of inputs and outputs. Written for
+readers without an astrophysics background.
