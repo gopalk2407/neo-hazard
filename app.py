@@ -27,6 +27,19 @@ def load_neos() -> pd.DataFrame:
     return df[df["neo"] == 1].sort_values("hazard_score", ascending=False).reset_index(drop=True)
 
 
+if not SCORED_PATH.exists():
+    st.error(f"Scored data not found at `{SCORED_PATH}`.")
+    st.markdown(
+        "This file is generated, not shipped in the repo. Create it on this machine with:\n\n"
+        "```bash\n"
+        "uv run python -m neo_hazard.train   # needs dataset.csv in the project root\n"
+        "uv run python -m neo_hazard.rank    # writes outputs/scored.parquet\n"
+        "```\n\n"
+        "or copy `models/pha_hgb.joblib` and `outputs/scored.parquet` from a machine "
+        "that already has them. See the README section *Running on another Mac*."
+    )
+    st.stop()
+
 neos = load_neos()
 DEFAULTS = neos[SIGMA_COLS + ["rms"]].median().to_dict()
 
@@ -110,9 +123,9 @@ def show_result(r: pd.Series) -> None:
         st.success("Not classified as hazardous by the model.")
 
     g = st.columns(2)
-    g[0].plotly_chart(orbit_figure(r), use_container_width=True)
+    g[0].plotly_chart(orbit_figure(r), width="stretch")
     g[1].plotly_chart(population_figure(r.to_frame().T.astype({"moid": float, "H": float})),
-                      use_container_width=True)
+                      width="stretch")
 
 
 # ---------- page ----------
@@ -131,7 +144,7 @@ if mode == "Known asteroid":
     show_result(row)
     st.dataframe(neos.head(25)[["full_name", "H", "diameter", "moid", "moid_ld",
                                 "p_moid_within_capture", "p_pha_ml", "hazard_score"]],
-                 hide_index=True, use_container_width=True)
+                 hide_index=True, width="stretch")
     st.caption("Top 25 NEOs by hazard score")
 
 elif mode == "Enter orbit":
@@ -172,9 +185,9 @@ else:
             cols = [c for c in ["name"] if c in out] + REQUIRED + [
                 "moid", "moid_source", "moid_ld", "p_pha_ml", "p_moid_within_capture",
                 "impact_proxy_per_yr", "hazard_score"]
-            st.dataframe(out[cols], hide_index=True, use_container_width=True)
+            st.dataframe(out[cols], hide_index=True, width="stretch")
             st.download_button("Download results", out[cols].to_csv(index=False), "hazard_results.csv")
-            st.plotly_chart(population_figure(out), use_container_width=True)
+            st.plotly_chart(population_figure(out), width="stretch")
             pick = st.selectbox("Inspect one orbit", out.index,
                                 format_func=lambda k: str(out.loc[k].get("name", k)))
             show_result(out.loc[pick])
